@@ -22,7 +22,8 @@ install:
               --write-kubeconfig-mode=644 \
               --disable traefik \
               --disable metrics-server \
-              --disable local-storage
+              --disable local-storage \
+              --disable-network-policy
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
       }
 
@@ -43,7 +44,8 @@ jobs:
         - kubectl get all --all-namespaces
       after_failure:
         - kubectl get all --all-namespaces
-        - kubectl logs pebble-test -c acme-mgmt
+        - kubectl logs pebble-test --all-containers
+        - kubectl logs pebble-coredns-test --all-containers
     - stage: publish
       script:
         - pip install chartpress
